@@ -25,7 +25,7 @@ namespace CBTExample
 
             // Start by setting the capabilities
             var caps = new DesiredCapabilities ();
-            caps.SetCapability("name", "Selenium Test Example");
+            caps.SetCapability("name", "Basic - Selenium Test Example");
             caps.SetCapability("build", "1.0");
             caps.SetCapability("browser_api_name", "Edge20");
             caps.SetCapability("os_api_name", "Win10");
