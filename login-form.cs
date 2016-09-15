@@ -90,8 +90,8 @@ namespace LoginFormTest
 
         public string BaseURL = "https://crossbrowsertesting.com/api/v3/selenium";
 
-        public string username = CBTExample.username;
-        public string authkey = CBTExample.authkey;
+        public string username = LoginFormTest.username;
+        public string authkey = LoginFormTest.authkey;
 
         public string takeSnapshot(string sessionId)
         {

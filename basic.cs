@@ -69,8 +69,8 @@ namespace BasicTest
 
         public string BaseURL = "https://crossbrowsertesting.com/api/v3/selenium";
 
-        public string username = CBTExample.username;
-        public string authkey = CBTExample.authkey;
+        public string username = BasicTest.username;
+        public string authkey = BasicTest.authkey;
 
         public string takeSnapshot(string sessionId){
             // returns the screenshot hash to be used in the setDescription method.

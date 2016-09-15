@@ -96,8 +96,8 @@ namespace DragAndDropTest
 
         public string BaseURL = "https://crossbrowsertesting.com/api/v3/selenium";
 
-        public string username = CBTExample.username;
-        public string authkey = CBTExample.authkey;
+        public string username = DragAndDropTest.username;
+        public string authkey = DragAndDropTest.authkey;
 
         public string takeSnapshot(string sessionId)
         {
