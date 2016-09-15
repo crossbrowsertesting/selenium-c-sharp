@@ -10,11 +10,13 @@ using System.Text;
 using System.Text.RegularExpressions;
 using NUnit.Framework;
 using OpenQA.Selenium.Remote;
-using System.Collections.Generic;
+using OpenQA.Selenium.Support.UI;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Interactions;
 
-namespace TodoAppTest
+namespace DragAndDropTest
 {
-    class TodoAppTest
+    class DragAndDropTest
     {
         // put your username and authkey here:
         public static string username = "user@email.com";
@@ -26,10 +28,10 @@ namespace TodoAppTest
 
             // Start by setting the capabilities
             var caps = new DesiredCapabilities();
-            caps.SetCapability("name", "Todo App Example");
+            caps.SetCapability("name", "Drag-and-Drop Example");
             caps.SetCapability("build", "1.0");
-            caps.SetCapability("browser_api_name", "IE9");
-            caps.SetCapability("os_api_name", "Win7-C1");
+            caps.SetCapability("browser_api_name", "Edge20");
+            caps.SetCapability("os_api_name", "Win10");
             caps.SetCapability("screen_resolution", "1024x768");
             caps.SetCapability("record_video", "true");
             caps.SetCapability("record_network", "true");
@@ -45,42 +47,42 @@ namespace TodoAppTest
             {
                 // Maximize the window - DESKTOPS ONLY
                 // driver.Manage().Window.Maximize();
-                // Navigate to the URL
-                Console.WriteLine("Navigating to todos app.");
-                driver.Navigate().GoToUrl("http://crossbrowsertesting.github.io/todo-app.html");
-                // Check the title
-                Console.WriteLine("Clicking Checkbox");
-                driver.FindElementByName("todo-4").Click();
-                Console.WriteLine("Clicking Checkbox");
-                driver.FindElementByName("todo-5").Click();
-
-                // If both clicks worked, then te following List should have length 2
-                IList<OpenQA.Selenium.IWebElement> elems = driver.FindElementsByClassName("done-true");
-                // so we'll assert that this is correct.
-                Assert.AreEqual(2, elems.Count);
-
-                Console.WriteLine("Entering Text");
-                driver.FindElementById("todotext").SendKeys("Run your first Selenium Test");
-                driver.FindElementById("addbutton").Click();
-
-
-                // lets also assert that the new todo we added is in the list
-                string spanText = driver.FindElementByXPath("/html/body/div/div/div/ul/li[6]/span").Text;
-                Assert.AreEqual("run your first selenium test", spanText);
-                Console.WriteLine("Archiving old todos");
-                driver.FindElementByLinkText("archive").Click();
-
-                elems = driver.FindElementsByClassName("done-false");
-                Assert.AreEqual(4, elems.Count);
-
-                Console.WriteLine("Taking Snapshot");
-                cbtapi.takeSnapshot(driver.SessionId.ToString());
                 
+                // Navigate to the URL
+                driver.Navigate().GoToUrl("http://crossbrowsertesting.github.io/drag-and-drop.html");
+
+                // let's grab the first element
+                Console.WriteLine("Grabbing the draggable element");
+                IWebElement from = driver.FindElementById("draggable");
+
+                // then the second element
+                Console.WriteLine("grabbing the element to drag to");
+                IWebElement to = driver.FindElementById("droppable");
+
+                // Actions are used to perform the dragging process
+                Actions dragger = new Actions(driver);
+
+
+                // We'll click and holde draggable, move it to droppable, and release
+                Console.WriteLine("dragging element");
+                IAction dragAndDrop = dragger.ClickAndHold(from)
+                                            .MoveToElement(to)
+                                            .Release()
+                                            .Build();
+                dragAndDrop.Perform();
+
+                // Let's assert that the final state of droppable element is what we want
+                string droppableText = driver.FindElementByXPath("//*[@id=\"droppable\"]/p").Text;
+                Assert.AreEqual("Dropped!", droppableText);
+
                 cbtapi.setScore(driver.SessionId.ToString(), "pass");
                 driver.Quit();
             }
             catch (AssertionException ex)
             {
+
+                var snapshotHash = cbtapi.takeSnapshot(driver.SessionId.ToString());
+                cbtapi.setDescription(driver.SessionId.ToString(), snapshotHash, ex.ToString());
                 cbtapi.setScore(driver.SessionId.ToString(), "fail");
                 Console.WriteLine("caught the exception : " + ex);
                 driver.Quit();
@@ -94,8 +96,8 @@ namespace TodoAppTest
 
         public string BaseURL = "https://crossbrowsertesting.com/api/v3/selenium";
 
-        public string username = TodoAppTest.username;
-        public string authkey = TodoAppTest.authkey;
+        public string username = CBTExample.username;
+        public string authkey = CBTExample.authkey;
 
         public string takeSnapshot(string sessionId)
         {

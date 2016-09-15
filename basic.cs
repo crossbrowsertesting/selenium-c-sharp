@@ -11,9 +11,9 @@ using System.Text.RegularExpressions;
 using NUnit.Framework;
 using OpenQA.Selenium.Remote; 
 
-namespace CBTExample
+namespace BasicTest
 {
-    class CBTExample
+    class BasicTest
     {
         // put your username and authkey here:
         public static string username = "user@email.com";
@@ -25,7 +25,7 @@ namespace CBTExample
 
             // Start by setting the capabilities
             var caps = new DesiredCapabilities ();
-            caps.SetCapability("name", "Basic - Selenium Test Example");
+            caps.SetCapability("name", "Basic Example");
             caps.SetCapability("build", "1.0");
             caps.SetCapability("browser_api_name", "Edge20");
             caps.SetCapability("os_api_name", "Win10");

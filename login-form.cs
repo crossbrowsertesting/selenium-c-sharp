@@ -1,5 +1,6 @@
 // Getting started: http://docs.seleniumhq.org/docs/03_webdriver.jsp
 // API details: https://github.com/SeleniumHQ/selenium#selenium
+
 // Quick start video tutorial using Visual Studio: https://www.youtube.com/watch?v=CxDkRJ1iHwE
 // Step-by-step video turoial using Visual Studio: https://www.youtube.com/watch?v=uRJL0zu7U6k
 
@@ -10,11 +11,12 @@ using System.Text;
 using System.Text.RegularExpressions;
 using NUnit.Framework;
 using OpenQA.Selenium.Remote;
-using System.Collections.Generic;
+using OpenQA.Selenium.Support.UI;
+using OpenQA.Selenium;
 
-namespace TodoAppTest
+namespace LoginFormTest
 {
-    class TodoAppTest
+    class LoginFormTest
     {
         // put your username and authkey here:
         public static string username = "user@email.com";
@@ -26,10 +28,10 @@ namespace TodoAppTest
 
             // Start by setting the capabilities
             var caps = new DesiredCapabilities();
-            caps.SetCapability("name", "Todo App Example");
+            caps.SetCapability("name", "Login Form Example");
             caps.SetCapability("build", "1.0");
-            caps.SetCapability("browser_api_name", "IE9");
-            caps.SetCapability("os_api_name", "Win7-C1");
+            caps.SetCapability("browser_api_name", "Edge20");
+            caps.SetCapability("os_api_name", "Win10");
             caps.SetCapability("screen_resolution", "1024x768");
             caps.SetCapability("record_video", "true");
             caps.SetCapability("record_network", "true");
@@ -46,41 +48,35 @@ namespace TodoAppTest
                 // Maximize the window - DESKTOPS ONLY
                 // driver.Manage().Window.Maximize();
                 // Navigate to the URL
-                Console.WriteLine("Navigating to todos app.");
-                driver.Navigate().GoToUrl("http://crossbrowsertesting.github.io/todo-app.html");
+                driver.Navigate().GoToUrl("http://crossbrowsertesting.github.io/login-form.html");
                 // Check the title
-                Console.WriteLine("Clicking Checkbox");
-                driver.FindElementByName("todo-4").Click();
-                Console.WriteLine("Clicking Checkbox");
-                driver.FindElementByName("todo-5").Click();
+                Console.WriteLine("Entering username");
+                driver.FindElementByName("username").SendKeys("tester@crossbrowsertesting.com");
 
-                // If both clicks worked, then te following List should have length 2
-                IList<OpenQA.Selenium.IWebElement> elems = driver.FindElementsByClassName("done-true");
-                // so we'll assert that this is correct.
-                Assert.AreEqual(2, elems.Count);
+                // then by entering the password
+                Console.WriteLine("Entering password");
+                driver.FindElementByName("password").SendKeys("test123");
 
-                Console.WriteLine("Entering Text");
-                driver.FindElementById("todotext").SendKeys("Run your first Selenium Test");
-                driver.FindElementById("addbutton").Click();
+                // then by clicking the login button
+                Console.WriteLine("Logging in");
+                driver.FindElementByCssSelector("div.form-actions > button").Click();
 
-
-                // lets also assert that the new todo we added is in the list
-                string spanText = driver.FindElementByXPath("/html/body/div/div/div/ul/li[6]/span").Text;
-                Assert.AreEqual("run your first selenium test", spanText);
-                Console.WriteLine("Archiving old todos");
-                driver.FindElementByLinkText("archive").Click();
-
-                elems = driver.FindElementsByClassName("done-false");
-                Assert.AreEqual(4, elems.Count);
-
-                Console.WriteLine("Taking Snapshot");
-                cbtapi.takeSnapshot(driver.SessionId.ToString());
+                // let's wait here to ensure that the page has loaded completely
+                WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+                wait.Until(drv => driver.FindElement(By.XPath("//*[@id=\"logged-in-message\"]/h2")));
                 
+                // Let's assert that the welcome message is present on the page. 
+                // if not, an exception will be raised and we'll set the score to fail in the catch block.
+                string welcomeMessage = driver.FindElementByXPath("//*[@id=\"logged-in-message\"]/h2").Text;
+                Assert.AreEqual("Welcome tester@crossbrowsertesting.com", welcomeMessage);
                 cbtapi.setScore(driver.SessionId.ToString(), "pass");
                 driver.Quit();
             }
             catch (AssertionException ex)
             {
+
+                var snapshotHash = cbtapi.takeSnapshot(driver.SessionId.ToString());
+                cbtapi.setDescription(driver.SessionId.ToString(), snapshotHash, ex.ToString());
                 cbtapi.setScore(driver.SessionId.ToString(), "fail");
                 Console.WriteLine("caught the exception : " + ex);
                 driver.Quit();
@@ -94,8 +90,8 @@ namespace TodoAppTest
 
         public string BaseURL = "https://crossbrowsertesting.com/api/v3/selenium";
 
-        public string username = TodoAppTest.username;
-        public string authkey = TodoAppTest.authkey;
+        public string username = CBTExample.username;
+        public string authkey = CBTExample.authkey;
 
         public string takeSnapshot(string sessionId)
         {
