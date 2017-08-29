@@ -86,6 +86,8 @@ namespace BasicTest
             var response = (HttpWebResponse)request.GetResponse();
             // store the response
             var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
+            // close our request stream
+            response.close();
             // parse out the snapshot Hash value 
             var myregex = new Regex("(?<=\"hash\": \")((\\w|\\d)*)");
             var snapshotHash = myregex.Match(responseString).Value;
