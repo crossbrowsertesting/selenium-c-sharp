@@ -28,9 +28,10 @@ namespace TodoAppTest
             var caps = new DesiredCapabilities();
             caps.SetCapability("name", "Todo App Example");
             caps.SetCapability("build", "1.0");
-            // request latest chrome, try ff-latest for firefox
-            caps.SetCapability("browser_api_name", "chrome-latest");
-            caps.SetCapability("os_api_name", "Win10");
+            // request latest chrome by default
+            // To specify version add caps.SetCapability("version", "desired version")
+            caps.SetCapability("browserName", "Chrome");        
+            caps.SetCapability("platform", "Windows 10");
             caps.SetCapability("screen_resolution", "1024x768");
             caps.SetCapability("record_video", "true");
             caps.SetCapability("record_network", "true");
