@@ -84,15 +84,16 @@ namespace BasicTest
             request.ContentType = "application/x-www-form-urlencoded";
             request.UserAgent = "HttpWebRequest";
             // Execute the request
-            var response = (HttpWebResponse)request.GetResponse();
+            WebResponse response = request.GetResponse();
             // store the response
-            var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
+            String responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
             // close our request stream
             response.close();
             // parse out the snapshot Hash value 
-            var myregex = new Regex("(?<=\"hash\": \")((\\w|\\d)*)");
-            var snapshotHash = myregex.Match(responseString).Value;
+            Regex myregex = new Regex("(?<=\"hash\": \")((\\w|\\d)*)");
+            String snapshotHash = myregex.Match(responseString).Value;
             Console.WriteLine (snapshotHash);
+            response.Close();
             return snapshotHash;
         }
 
@@ -111,6 +112,7 @@ namespace BasicTest
             newStream.Write (putData, 0, putData.Length);
             newStream.Close ();
             WebResponse response = request.GetResponse ();
+            response.Close();
         }
             
         public void setScore(string sessionId, string score ) {
@@ -129,6 +131,8 @@ namespace BasicTest
             // Write data to stream
             Stream newStream = request.GetRequestStream ();
             newStream.Write (putdata, 0, putdata.Length);
+            WebResponse response = request.GetResponse();
+            response.Close();
         }
     }
 }
