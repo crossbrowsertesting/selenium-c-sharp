@@ -87,12 +87,12 @@ namespace BasicTest
             WebResponse response = request.GetResponse();
             // store the response
             String responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
-            // close our request stream
-            response.close();
+
             // parse out the snapshot Hash value 
             Regex myregex = new Regex("(?<=\"hash\": \")((\\w|\\d)*)");
             String snapshotHash = myregex.Match(responseString).Value;
             Console.WriteLine (snapshotHash);
+            //close our request stream
             response.Close();
             return snapshotHash;
         }
