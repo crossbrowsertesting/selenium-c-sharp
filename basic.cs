@@ -9,7 +9,7 @@ using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using NUnit.Framework;
-using OpenQA.Selenium.Remote; 
+using OpenQA.Selenium.Remote;
 
 namespace BasicTest
 {
@@ -29,20 +29,20 @@ namespace BasicTest
             caps.SetCapability("build", "1.0");
             // request latest chrome by default
             // To specify version add caps.SetCapability("version", "desired version")
-            caps.SetCapability("browserName", "Chrome");        
+            caps.SetCapability("browserName", "Chrome");
             caps.SetCapability("platform", "Windows 10");
             caps.SetCapability("screen_resolution", "1366x768");
             caps.SetCapability("record_video", "true");
-            caps.SetCapability("record_network", "true");
+            caps.SetCapability("record_network", "false");
 
-            caps.SetCapability ("username", username); 
+            caps.SetCapability ("username", username);
             caps.SetCapability ("password", authkey);
 
             // Start the remote webdriver
             RemoteWebDriver driver = new RemoteWebDriver (new Uri ("http://hub.crossbrowsertesting.com:80/wd/hub"), caps, TimeSpan.FromSeconds(180));
-            
+
             // wrap the rest of the test in a try-catch for error logging via the API
-            try 
+            try
             {
                 // Maximize the window - DESKTOPS ONLY
                 // driver.Manage().Window.Maximize();
@@ -88,7 +88,7 @@ namespace BasicTest
             // store the response
             String responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
 
-            // parse out the snapshot Hash value 
+            // parse out the snapshot Hash value
             Regex myregex = new Regex("(?<=\"hash\": \")((\\w|\\d)*)");
             String snapshotHash = myregex.Match(responseString).Value;
             Console.WriteLine (snapshotHash);
@@ -114,7 +114,7 @@ namespace BasicTest
             WebResponse response = request.GetResponse ();
             response.Close();
         }
-            
+
         public void setScore(string sessionId, string score ) {
             string url = BaseURL + "/" + sessionId;
             // encode the data to be written

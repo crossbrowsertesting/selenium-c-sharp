@@ -32,11 +32,11 @@ namespace LoginFormTest
             caps.SetCapability("build", "1.0");
             // request latest chrome by default
             // To specify version add caps.SetCapability("version", "desired version")
-            caps.SetCapability("browserName", "Chrome");        
+            caps.SetCapability("browserName", "Chrome");
             caps.SetCapability("platform", "Windows 10");
             caps.SetCapability("screen_resolution", "1366x768");
             caps.SetCapability("record_video", "true");
-            caps.SetCapability("record_network", "true");
+            caps.SetCapability("record_network", "false");
 
             caps.SetCapability("username", username);
             caps.SetCapability("password", authkey);
@@ -66,8 +66,8 @@ namespace LoginFormTest
                 // let's wait here to ensure that the page has loaded completely
                 WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
                 wait.Until(drv => driver.FindElement(By.XPath("//*[@id=\"logged-in-message\"]/h2")));
-                
-                // Let's assert that the welcome message is present on the page. 
+
+                // Let's assert that the welcome message is present on the page.
                 // if not, an exception will be raised and we'll set the score to fail in the catch block.
                 string welcomeMessage = driver.FindElementByXPath("//*[@id=\"logged-in-message\"]/h2").Text;
                 Assert.AreEqual("Welcome tester@crossbrowsertesting.com", welcomeMessage);
@@ -111,7 +111,7 @@ namespace LoginFormTest
             var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
             // close our request stream
             response.close();
-            // parse out the snapshot Hash value 
+            // parse out the snapshot Hash value
             var myregex = new Regex("(?<=\"hash\": \")((\\w|\\d)*)");
             var snapshotHash = myregex.Match(responseString).Value;
             Console.WriteLine(snapshotHash);

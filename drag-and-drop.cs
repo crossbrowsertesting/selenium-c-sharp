@@ -32,11 +32,11 @@ namespace DragAndDropTest
             caps.SetCapability("build", "1.0");
             // request latest chrome by default
             // To specify version add caps.SetCapability("version", "desired version")
-            caps.SetCapability("browserName", "Chrome");        
+            caps.SetCapability("browserName", "Chrome");
             caps.SetCapability("platform", "Windows 10");
             caps.SetCapability("screen_resolution", "1366x768");
             caps.SetCapability("record_video", "true");
-            caps.SetCapability("record_network", "true");
+            caps.SetCapability("record_network", "false");
 
             caps.SetCapability("username", username);
             caps.SetCapability("password", authkey);
@@ -49,7 +49,7 @@ namespace DragAndDropTest
             {
                 // Maximize the window - DESKTOPS ONLY
                 // driver.Manage().Window.Maximize();
-                
+
                 // Navigate to the URL
                 driver.Navigate().GoToUrl("http://crossbrowsertesting.github.io/drag-and-drop.html");
 
@@ -117,7 +117,7 @@ namespace DragAndDropTest
             var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
             // close our request stream
             response.close();
-            // parse out the snapshot Hash value 
+            // parse out the snapshot Hash value
             var myregex = new Regex("(?<=\"hash\": \")((\\w|\\d)*)");
             var snapshotHash = myregex.Match(responseString).Value;
             Console.WriteLine(snapshotHash);
