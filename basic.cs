@@ -9,6 +9,7 @@ using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using NUnit.Framework;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Remote;
 
 namespace BasicTest
@@ -24,19 +25,18 @@ namespace BasicTest
             var cbtapi = new CBTApi();
 
             // Start by setting the capabilities
-            var caps = new DesiredCapabilities ();
-            caps.SetCapability("name", "Basic Example");
-            caps.SetCapability("build", "1.0");
-            // request latest chrome by default
-            // To specify version add caps.SetCapability("version", "desired version")
-            caps.SetCapability("browserName", "Chrome");
-            caps.SetCapability("platform", "Windows 10");
-            caps.SetCapability("screen_resolution", "1366x768");
-            caps.SetCapability("record_video", "true");
-            caps.SetCapability("record_network", "false");
+            var caps = new RemoteSessionSettings();
 
-            caps.SetCapability ("username", username);
-            caps.SetCapability ("password", authkey);
+            caps.AddMetadataSetting("name", "C Sharp Test");
+            caps.AddMetadataSetting("username", username);
+            caps.AddMetadataSetting("password", authkey);
+            caps.AddMetadataSetting("browserName", "Chrome");
+            caps.AddMetadataSetting("version", "72");
+            caps.AddMetadataSetting("platform", "Windows 10");
+            caps.AddMetadataSetting("screen_resolution", "1024x768");
+            caps.AddMetadataSetting("record_video", "true");
+            caps.AddMetadataSetting("record_network", "false");
+
 
             // Start the remote webdriver
             RemoteWebDriver driver = new RemoteWebDriver (new Uri ("http://hub.crossbrowsertesting.com:80/wd/hub"), caps, TimeSpan.FromSeconds(180));
