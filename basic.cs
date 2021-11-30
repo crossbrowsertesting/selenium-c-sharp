@@ -25,21 +25,20 @@ namespace BasicTest
             var cbtapi = new CBTApi();
 
             // Start by setting the capabilities
-            var caps = new RemoteSessionSettings();
+            var browserOptions = new OpenQA.Selenium.Chrome.ChromeOptions
+            {
+                PlatformName = "Windows 10",
+                BrowserVersion = "latest"
+            };
 
-            caps.AddMetadataSetting("name", "C Sharp Test");
-            caps.AddMetadataSetting("username", username);
-            caps.AddMetadataSetting("password", authkey);
-            caps.AddMetadataSetting("browserName", "Chrome");
-            caps.AddMetadataSetting("version", "72");
-            caps.AddMetadataSetting("platform", "Windows 10");
-            caps.AddMetadataSetting("screen_resolution", "1024x768");
-            caps.AddMetadataSetting("record_video", "true");
-            caps.AddMetadataSetting("record_network", "false");
+            var cloudOptions = new Dictionary<string, object>();
+            cloudOptions.Add("username", username);
+            cloudOptions.Add("password", authkey);
+            browserOptions.AddAdditionalOption("cbt:options", cloudOptions);
 
 
             // Start the remote webdriver
-            RemoteWebDriver driver = new RemoteWebDriver (new Uri ("http://hub.crossbrowsertesting.com:80/wd/hub"), caps, TimeSpan.FromSeconds(180));
+            RemoteWebDriver driver = new RemoteWebDriver (new Uri ("http://hub.crossbrowsertesting.com:80/wd/hub"), browserOptions.ToCapabilities(), TimeSpan.FromSeconds(180));
 
             // wrap the rest of the test in a try-catch for error logging via the API
             try
